@@ -50,11 +50,22 @@
 				throw new Exception('Could not commit transaction');
 			}
 		}
-		
+
 		public function rollbackTransaction() {
 			if(!$this->db->rollBack()) {
 				throw new Exception('Could not rollback transaction');
 			}
 		}
 
+		public function transaction($closure) {
+			try {
+				$this->startTransaction();
+				$result = $closure();
+				$this->commit();
+				return $result;
+			} catch(\Exception $e) {
+				$this->rollbackTransaction();
+				throw $e;
+			}
+		}
 	}
