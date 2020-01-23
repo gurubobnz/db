@@ -1,0 +1,21 @@
+{
+    "name": "gurubobnz/db",
+    "description": "PDO based DB helper library.",
+    "keywords": ["mysql","pdo"],
+    "license": "WTFPL",
+    "authors": [
+        {
+            "name": "Bob Brown",
+            "email": "gurubob@gmail.com"
+        }
+    ],
+    "type": "project",
+    "require": {
+		"php": ">=5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "GuruBob\\": "src/"
+        }
+    }
+}
