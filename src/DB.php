@@ -61,7 +61,7 @@
 			try {
 				$this->startTransaction();
 				$result = $closure();
-				$this->commit();
+				$this->commitTransaction();
 				return $result;
 			} catch(\Exception $e) {
 				$this->rollbackTransaction();
