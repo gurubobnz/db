@@ -33,6 +33,12 @@
 			return $st->fetch(PDO::FETCH_ASSOC);
 		}
 
+		public function insert($table, $fields) {
+			$sql = 'INSERT INTO `'.$table.'` SET ';
+			$sql .= implode(', ', array_map(function($f) { return '`'.$f.'` = ?'; }, array_keys($fields)));
+			return $this->execute($sql, array_values($fields));
+		}
+
 		public function startTransaction() {
 			if(!$this->db->beginTransaction()) {
 				throw new Exception('Could not start transaction');
