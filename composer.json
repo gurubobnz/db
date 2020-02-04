@@ -1,5 +1,5 @@
 {
-    "name": "gurubobnz/db",
+    "name": "gurubob/db",
     "description": "PDO based DB helper library.",
     "keywords": ["mysql","pdo"],
     "license": "WTFPL",
