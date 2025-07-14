@@ -5,12 +5,19 @@
 
 	class DB {
 
-		public function __construct($dsn, $username, $password) {
+		private $db;
+
+		public function __construct($dsn, $username, $password, $encoding = 'utf8mb4') {
 			$this->db = new PDO($dsn, $username, $password);
 			$this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 			$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$this->db->exec('SET NAMES utf8');
+			$this->db->exec('SET NAMES '.$encoding);
 		}
+
+		public function isConnected(): bool {
+			return $this->db !== null;
+		}
+
 
 		public function getLastInsertId() {
 			return $this->db->lastInsertId();
@@ -18,7 +25,7 @@
 
 		public function execute($sql, $parameters = []) {
 			$st = $this->db->prepare($sql);
-			$st->execute($parameters);
+			return $st->execute($parameters);
 		}
 
 		public function fetchAll($sql, $parameters = []) {
@@ -34,6 +41,10 @@
 		}
 
 		public function insert($table, $fields) {
+			// prevent SQL injection by validating table name or using a whitelist of characters
+    		if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $table)) {
+        		throw new \InvalidArgumentException('Invalid table name');
+    		}
 			$sql = 'INSERT INTO `'.$table.'` SET ';
 			$sql .= implode(', ', array_map(function($f) { return '`'.$f.'` = ?'; }, array_keys($fields)));
 			return $this->execute($sql, array_values($fields));
@@ -61,7 +72,7 @@
 			try {
 				$this->startTransaction();
 				$result = $closure();
-				$this->commit();
+				$this->commitTransaction();
 				return $result;
 			} catch(\Exception $e) {
 				$this->rollbackTransaction();
