@@ -52,19 +52,19 @@
 
 		public function startTransaction() {
 			if(!$this->db->beginTransaction()) {
-				throw new Exception('Could not start transaction');
+				throw new \RuntimeException('Could not start transaction');
 			}
 		}
 
 		public function commitTransaction() {
 			if(!$this->db->commit()) {
-				throw new Exception('Could not commit transaction');
+				throw new \RuntimeException('Could not commit transaction');
 			}
 		}
 
 		public function rollbackTransaction() {
 			if(!$this->db->rollBack()) {
-				throw new Exception('Could not rollback transaction');
+				throw new \RuntimeException('Could not rollback transaction');
 			}
 		}
 
